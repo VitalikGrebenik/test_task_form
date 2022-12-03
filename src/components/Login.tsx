@@ -21,7 +21,6 @@ function Login () {
     }
     const onSubmit = async () => {
         await loading({message: 'Loading...'})
-        console.log('errors', errors?.Email)
         localStorage.setItem('Email', dataLogin?.Email!);
         localStorage.setItem('Password', dataLogin?.Password!);
         setTimeout(() => {
