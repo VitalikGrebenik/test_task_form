@@ -1,28 +1,35 @@
-import { IonBackButton, IonButton, IonCard, IonCardContent, IonIcon, IonInput, IonItem, IonLabel, IonText, useIonAlert, useIonLoading } from '@ionic/react'
-import React, { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
+import React, { useState } from 'react'
+import {observer, inject} from 'mobx-react'
+import { useForm } from 'react-hook-form'
+import { IonButton, IonCard, IonCardContent, IonIcon, IonInput, IonItem, IonLabel, IonText, useIonAlert, useIonLoading } from '@ionic/react'
 import { useNavigate } from 'react-router-dom'
 import {logIn} from 'ionicons/icons'
-import { useForm } from 'react-hook-form'
-
+import dataLoginStore from '../../store/dataLoginStore.js'
 
 interface Inputs {
     Email: string,
     Password: string,
 };
 
-function Login () {
+type ICData = {
+	dataLoginStore?: dataLoginStore,
+}
+
+const Login = 
+    inject('dataLoginStore')
+    (observer(( { dataLoginStore } : ICData )=> {
     const {register, formState: { errors, isValid } ,handleSubmit} = useForm<Inputs>({mode:'all'})
-    const [dataLogin, setDataLogin] = useState<Inputs>()
+    const [Login, setLogin] = useState<Inputs>()
     const [loading, setLoading] = useIonLoading()
     const [alert] = useIonAlert()
     const navigate = useNavigate()
-    const click = () => {
+    const redirectHome = () => {
         navigate('/app/home')
     }
     const onSubmit = async () => {
         await loading({message: 'Loading...'})
-        localStorage.setItem('Email', dataLogin?.Email!);
-        localStorage.setItem('Password', dataLogin?.Password!);
+        dataLoginStore!.dataEmail(Login!.Email)
+        dataLoginStore!.dataPassword(Login!.Password)
         setTimeout(() => {
             alert({
                 header: 'Registration',
@@ -31,7 +38,7 @@ function Login () {
                     {
                         text: 'ok',
                         handler: () => {
-                            click()
+                            redirectHome()
                         }
                 }]
             })
@@ -42,7 +49,7 @@ function Login () {
   return (
     <IonCard>
         <IonCardContent>
-            <form onSubmit={handleSubmit((data: Inputs)=>{setDataLogin(data)})}>
+            <form onSubmit={handleSubmit((data: Inputs)=>{setLogin(data)})}>
                 <IonItem>
                     <IonLabel position='floating' color='dark'>Email</IonLabel>
                     <IonInput {...register('Email', 
@@ -75,7 +82,7 @@ function Login () {
         </IonCardContent>
     </IonCard>
   )
-}
+}))
 
 export default Login
 

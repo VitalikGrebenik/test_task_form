@@ -14,9 +14,9 @@ import '@ionic/react/css/display.css';
 import { IonHeader, IonTitle, IonToolbar, setupIonicReact } from '@ionic/react';
 
 setupIonicReact();
-import '../theme/variables.css'
+import '../../theme/variables.css'
 
-function App() {
+function Header() {
   return (
     <div style={{maxWidth:'400px', margin: '0 auto'}}>
       <IonHeader>
@@ -29,4 +29,4 @@ function App() {
   )
 }
 
-export default App
+export default Header
